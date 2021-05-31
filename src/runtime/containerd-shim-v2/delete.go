@@ -15,6 +15,9 @@ import (
 )
 
 func deleteContainer(ctx context.Context, s *service, c *container) error {
+	shimLog.Debug("deleteContainer start()")
+	defer shimLog.Debug("deleteContainer end()")
+
 	if !c.cType.IsSandbox() {
 		if c.status != task.StatusStopped {
 			if _, err := s.sandbox.StopContainer(ctx, c.id, false); err != nil && !isNotFound(err) {
