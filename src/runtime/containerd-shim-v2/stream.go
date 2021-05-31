@@ -33,6 +33,8 @@ type ttyIO struct {
 }
 
 func (tty *ttyIO) close() {
+	shimLog.Debug("close() start")
+	defer shimLog.Debug("close() end")
 
 	if tty.Stdin != nil {
 		tty.Stdin.Close()
@@ -50,6 +52,9 @@ func (tty *ttyIO) close() {
 }
 
 func newTtyIO(ctx context.Context, stdin, stdout, stderr string, console bool) (*ttyIO, error) {
+	shimLog.Debug("newTtyIO() start")
+	defer shimLog.Debug("newTtyIO() end")
+
 	var in io.ReadCloser
 	var outw io.Writer
 	var errw io.Writer
@@ -86,6 +91,9 @@ func newTtyIO(ctx context.Context, stdin, stdout, stderr string, console bool) (
 }
 
 func ioCopy(exitch, stdinCloser chan struct{}, tty *ttyIO, stdinPipe io.WriteCloser, stdoutPipe, stderrPipe io.Reader) {
+	shimLog.Debug("ioCopy() start")
+	defer shimLog.Debug("ioCopy() end")
+
 	var wg sync.WaitGroup
 
 	if tty.Stdin != nil {
