@@ -49,6 +49,9 @@ type tty struct {
 }
 
 func getEnvs(envs []string) []types.EnvVar {
+	shimLog.Debug("getEnvs start()")
+	defer shimLog.Debug("getEnvs end()")
+
 	var vcEnvs = []types.EnvVar{}
 	var env types.EnvVar
 
@@ -68,6 +71,9 @@ func getEnvs(envs []string) []types.EnvVar {
 }
 
 func newExec(c *container, stdin, stdout, stderr string, terminal bool, jspec *googleProtobuf.Any) (*exec, error) {
+	shimLog.Debug("newExec start()")
+	defer shimLog.Debug("newExec end()")
+
 	var height uint32
 	var width uint32
 
@@ -131,6 +137,9 @@ func newExec(c *container, stdin, stdout, stderr string, terminal bool, jspec *g
 }
 
 func (c *container) getExec(id string) (*exec, error) {
+	shimLog.Debug("getExec start()")
+	defer shimLog.Debug("getExec end()")
+
 	if c.execs == nil {
 		return nil, errdefs.ToGRPCf(errdefs.ErrNotFound, "exec does not exist %s", id)
 	}
