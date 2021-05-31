@@ -22,6 +22,9 @@ import (
 )
 
 func cReap(s *service, status int, id, execid string, exitat time.Time) {
+	shimLog.Debug("cReap() start")
+	defer shimLog.Debug("cReap() end")
+
 	s.ec <- exit{
 		timestamp: exitat,
 		pid:       s.hpid,
@@ -32,6 +35,9 @@ func cReap(s *service, status int, id, execid string, exitat time.Time) {
 }
 
 func cleanupContainer(ctx context.Context, sandboxID, cid, bundlePath string) error {
+	shimLog.Debug("cleanupContainer() start")
+	defer shimLog.Debug("cleanupContainer() end")
+
 	shimLog.WithField("service", "cleanup").WithField("container", cid).Info("Cleanup container")
 
 	err := vci.CleanupContainer(ctx, sandboxID, cid, true)
@@ -51,6 +57,9 @@ func cleanupContainer(ctx context.Context, sandboxID, cid, bundlePath string) er
 }
 
 func validBundle(containerID, bundlePath string) (string, error) {
+	shimLog.Debug("validBundle() start")
+	defer shimLog.Debug("validBundle() end")
+
 	// container ID MUST be provided.
 	if containerID == "" {
 		return "", fmt.Errorf("Missing container ID")
@@ -79,6 +88,9 @@ func validBundle(containerID, bundlePath string) (string, error) {
 }
 
 func getAddress(ctx context.Context, bundlePath, id string) (string, error) {
+	shimLog.Debug("getAddress() start")
+	defer shimLog.Debug("getAddress() end")
+
 	var err error
 
 	// Checks the MUST and MUST NOT from OCI runtime specification
@@ -112,6 +124,9 @@ func getAddress(ctx context.Context, bundlePath, id string) (string, error) {
 }
 
 func noNeedForOutput(detach bool, tty bool) bool {
+	shimLog.Debug("noNeedForOutput() start")
+	defer shimLog.Debug("noNeedForOutput() end")
+
 	if !detach {
 		return false
 	}
