@@ -36,6 +36,9 @@ var (
 
 // agentURL returns URL for agent
 func (s *service) agentURL(w http.ResponseWriter, r *http.Request) {
+	shimLog.Debug("agentURL() start")
+	defer shimLog.Debug("agentURL() end")
+
 	url, err := s.sandbox.GetAgentURL()
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -48,6 +51,8 @@ func (s *service) agentURL(w http.ResponseWriter, r *http.Request) {
 
 // serveMetrics handle /metrics requests
 func (s *service) serveMetrics(w http.ResponseWriter, r *http.Request) {
+	shimLog.Debug("serveMetrics() start")
+	defer shimLog.Debug("serveMetrics() end")
 
 	// update metrics from sandbox
 	s.sandbox.UpdateRuntimeMetrics()
@@ -99,6 +104,9 @@ func (s *service) serveMetrics(w http.ResponseWriter, r *http.Request) {
 }
 
 func decodeAgentMetrics(body string) []*dto.MetricFamily {
+	shimLog.Debug("decodeAgentMetrics() start")
+	defer shimLog.Debug("decodeAgentMetrics() end")
+
 	// decode agent metrics
 	reader := strings.NewReader(body)
 	decoder := expfmt.NewDecoder(reader, expfmt.FmtText)
@@ -127,6 +135,9 @@ func decodeAgentMetrics(body string) []*dto.MetricFamily {
 }
 
 func (s *service) startManagementServer(ctx context.Context, ociSpec *specs.Spec) {
+	shimLog.Debug("startManagementService() start")
+	defer shimLog.Debug("startManagementService() end")
+
 	// metrics socket will under sandbox's bundle path
 	metricsAddress := SocketAddress(s.id)
 
@@ -163,6 +174,8 @@ func (s *service) startManagementServer(ctx context.Context, ociSpec *specs.Spec
 
 // mountPprofHandle provides a debug endpoint
 func (s *service) mountPprofHandle(m *http.ServeMux, ociSpec *specs.Spec) {
+	shimLog.Debug("mountPprofHandle() start")
+	defer shimLog.Debug("mountPprofHandle() end")
 
 	// return if not enabled
 	if !s.config.EnablePprof {
@@ -186,5 +199,8 @@ func (s *service) mountPprofHandle(m *http.ServeMux, ociSpec *specs.Spec) {
 // SocketAddress returns the address of the abstract domain socket for communicating with the
 // shim management endpoint
 func SocketAddress(id string) string {
+	shimLog.Debug("SocketAddress() start")
+	defer shimLog.Debug("SocketAddress() end")
+
 	return filepath.Join(string(filepath.Separator), "run", "vc", id, "shim-monitor")
 }
