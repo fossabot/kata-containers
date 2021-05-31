@@ -14,6 +14,9 @@ import (
 )
 
 func startContainer(ctx context.Context, s *service, c *container) error {
+	shimLog.Debug("startContainer() start")
+	defer shimLog.Debug("startContainer() end")
+
 	// start a container
 	if c.cType == "" {
 		err := fmt.Errorf("Bug, the container %s type is empty", c.id)
@@ -88,6 +91,9 @@ func startContainer(ctx context.Context, s *service, c *container) error {
 }
 
 func startExec(ctx context.Context, s *service, containerID, execID string) (*exec, error) {
+	shimLog.Debug("startExec() start")
+	defer shimLog.Debug("startExec() end")
+
 	// start an exec
 	c, err := s.getContainer(containerID)
 	if err != nil {
