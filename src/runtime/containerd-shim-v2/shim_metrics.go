@@ -85,6 +85,9 @@ var (
 )
 
 func registerMetrics() {
+	shimLog.Debug("registerMetrics() start")
+	defer shimLog.Debug("registerMetrics() end")
+
 	prometheus.MustRegister(rpcDurationsHistogram)
 	prometheus.MustRegister(katashimThreads)
 	prometheus.MustRegister(katashimProcStatus)
@@ -98,6 +101,9 @@ func registerMetrics() {
 
 // updateShimMetrics will update metrics for kata shim process itself
 func updateShimMetrics() error {
+	shimLog.Debug("updateShimMetrics() start")
+	defer shimLog.Debug("updateShimMetrics() end")
+
 	proc, err := procfs.Self()
 	if err != nil {
 		return err
@@ -137,6 +143,9 @@ func updateShimMetrics() error {
 
 // statsSandbox returns a detailed sandbox stats.
 func (s *service) statsSandbox(ctx context.Context) (vc.SandboxStats, []vc.ContainerStats, error) {
+	shimLog.Debug("statsSandbox() start")
+	defer shimLog.Debug("statsSandbox() end")
+
 	sandboxStats, err := s.sandbox.Stats(ctx)
 	if err != nil {
 		return vc.SandboxStats{}, []vc.ContainerStats{}, err
@@ -155,6 +164,9 @@ func (s *service) statsSandbox(ctx context.Context) (vc.SandboxStats, []vc.Conta
 }
 
 func calcOverhead(initialSandboxStats, finishSandboxStats vc.SandboxStats, initialContainerStats, finishContainersStats []vc.ContainerStats, deltaTime float64) (float64, float64) {
+	shimLog.Debug("calcOverhead() start")
+	defer shimLog.Debug("calcOverhead() end")
+
 	hostInitCPU := initialSandboxStats.CgroupStats.CPUStats.CPUUsage.TotalUsage
 	guestInitCPU := uint64(0)
 	for _, cs := range initialContainerStats {
@@ -181,6 +193,9 @@ func calcOverhead(initialSandboxStats, finishSandboxStats vc.SandboxStats, initi
 }
 
 func (s *service) getPodOverhead(ctx context.Context) (float64, float64, error) {
+	shimLog.Debug("getPodOverhead() start")
+	defer shimLog.Debug("getPodOverhead() end")
+
 	initTime := time.Now().UnixNano()
 	initialSandboxStats, initialContainerStats, err := s.statsSandbox(ctx)
 	if err != nil {
@@ -201,6 +216,9 @@ func (s *service) getPodOverhead(ctx context.Context) (float64, float64, error) 
 }
 
 func (s *service) setPodOverheadMetrics(ctx context.Context) error {
+	shimLog.Debug("setPodOverheadMetrics() start")
+	defer shimLog.Debug("setPodOverheadMetrics() end")
+
 	mem, cpu, err := s.getPodOverhead(ctx)
 	if err != nil {
 		return err
