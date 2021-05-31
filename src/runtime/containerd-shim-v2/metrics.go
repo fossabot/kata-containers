@@ -16,6 +16,9 @@ import (
 )
 
 func marshalMetrics(ctx context.Context, s *service, containerID string) (*google_protobuf.Any, error) {
+	shimLog.Debug("marshalMetrics start()")
+	defer shimLog.Debug("marshalMetrics end()")
+
 	stats, err := s.sandbox.StatsContainer(ctx, containerID)
 	if err != nil {
 		return nil, err
@@ -32,6 +35,9 @@ func marshalMetrics(ctx context.Context, s *service, containerID string) (*googl
 }
 
 func statsToMetrics(stats *vc.ContainerStats) *cgroups.Metrics {
+	shimLog.Debug("statsToMetrics start()")
+	defer shimLog.Debug("statsToMetrics end()")
+
 	metrics := &cgroups.Metrics{}
 
 	if stats.CgroupStats != nil {
@@ -50,6 +56,9 @@ func statsToMetrics(stats *vc.ContainerStats) *cgroups.Metrics {
 }
 
 func setHugetlbStats(vcHugetlb map[string]vc.HugetlbStats) []*cgroups.HugetlbStat {
+	shimLog.Debug("setHugetlbStats start()")
+	defer shimLog.Debug("setHugetlbStats end()")
+
 	var hugetlbStats []*cgroups.HugetlbStat
 	for _, v := range vcHugetlb {
 		hugetlbStats = append(
@@ -65,6 +74,9 @@ func setHugetlbStats(vcHugetlb map[string]vc.HugetlbStats) []*cgroups.HugetlbSta
 }
 
 func setPidsStats(vcPids vc.PidsStats) *cgroups.PidsStat {
+	shimLog.Debug("setPidsStats start()")
+	defer shimLog.Debug("setPidsStats end()")
+
 	pidsStats := &cgroups.PidsStat{
 		Current: vcPids.Current,
 		Limit:   vcPids.Limit,
@@ -74,6 +86,8 @@ func setPidsStats(vcPids vc.PidsStats) *cgroups.PidsStat {
 }
 
 func setCPUStats(vcCPU vc.CPUStats) *cgroups.CPUStat {
+	shimLog.Debug("setCPUStats start()")
+	defer shimLog.Debug("setCPUStats end()")
 
 	var perCPU []uint64
 	perCPU = append(perCPU, vcCPU.CPUUsage.PercpuUsage...)
@@ -96,6 +110,9 @@ func setCPUStats(vcCPU vc.CPUStats) *cgroups.CPUStat {
 }
 
 func setMemoryStats(vcMemory vc.MemoryStats) *cgroups.MemoryStat {
+	shimLog.Debug("setMemoryStats start()")
+	defer shimLog.Debug("setMemoryStats end()")
+
 	memoryStats := &cgroups.MemoryStat{
 		Usage: &cgroups.MemoryEntry{
 			Limit:   vcMemory.Usage.Limit,
@@ -146,6 +163,9 @@ func setMemoryStats(vcMemory vc.MemoryStats) *cgroups.MemoryStat {
 }
 
 func setBlkioStats(vcBlkio vc.BlkioStats) *cgroups.BlkIOStat {
+	shimLog.Debug("setBlkioStats start()")
+	defer shimLog.Debug("setBlkioStats end()")
+
 	blkioStats := &cgroups.BlkIOStat{
 		IoServiceBytesRecursive: copyBlkio(vcBlkio.IoServiceBytesRecursive),
 		IoServicedRecursive:     copyBlkio(vcBlkio.IoServicedRecursive),
@@ -161,6 +181,9 @@ func setBlkioStats(vcBlkio vc.BlkioStats) *cgroups.BlkIOStat {
 }
 
 func copyBlkio(s []vc.BlkioStatEntry) []*cgroups.BlkIOEntry {
+	shimLog.Debug("copuBlkio start()")
+	defer shimLog.Debug("copuBlkio end()")
+
 	ret := make([]*cgroups.BlkIOEntry, len(s))
 	for i, v := range s {
 		ret[i] = &cgroups.BlkIOEntry{
@@ -175,6 +198,9 @@ func copyBlkio(s []vc.BlkioStatEntry) []*cgroups.BlkIOEntry {
 }
 
 func setNetworkStats(vcNetwork []*vc.NetworkStats) []*cgroups.NetworkStat {
+	shimLog.Debug("setNetworkStats start()")
+	defer shimLog.Debug("setNetworkStats end()")
+
 	networkStats := make([]*cgroups.NetworkStat, len(vcNetwork))
 	for i, v := range vcNetwork {
 		networkStats[i] = &cgroups.NetworkStat{
