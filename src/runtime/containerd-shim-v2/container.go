@@ -40,6 +40,9 @@ type container struct {
 }
 
 func newContainer(s *service, r *taskAPI.CreateTaskRequest, containerType vc.ContainerType, spec *specs.Spec, mounted bool) (*container, error) {
+	shimLog.Debug("newContainer start()")
+	defer shimLog.Debug("newContainer end()")
+
 	if r == nil {
 		return nil, errdefs.ToGRPCf(errdefs.ErrInvalidArgument, " CreateTaskRequest points to nil")
 	}
