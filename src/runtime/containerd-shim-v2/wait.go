@@ -23,6 +23,9 @@ import (
 const defaultCheckInterval = 1 * time.Second
 
 func wait(ctx context.Context, s *service, c *container, execID string) (int32, error) {
+	shimLog.Debug("wait() start")
+	defer shimLog.Debug("wait() end")
+
 	var execs *exec
 	var err error
 
@@ -98,6 +101,9 @@ func wait(ctx context.Context, s *service, c *container, execID string) (int32, 
 }
 
 func watchSandbox(ctx context.Context, s *service) {
+	shimLog.Debug("watchSandbox() start")
+	defer shimLog.Debug("watchSandbox() end")
+
 	if s.monitor == nil {
 		return
 	}
@@ -136,6 +142,9 @@ func watchSandbox(ctx context.Context, s *service) {
 }
 
 func watchOOMEvents(ctx context.Context, s *service) {
+	shimLog.Debug("watchOOMEvents() start")
+	defer shimLog.Debug("watchOOMEvents() end")
+
 	if s.sandbox == nil {
 		return
 	}
