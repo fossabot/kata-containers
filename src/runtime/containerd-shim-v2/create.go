@@ -33,6 +33,9 @@ import (
 )
 
 func create(ctx context.Context, s *service, r *taskAPI.CreateTaskRequest) (*container, error) {
+	shimLog.Debug("create start()")
+	defer shimLog.Debug("create end()")
+
 	rootFs := vc.RootFs{}
 	if len(r.Rootfs) == 1 {
 		m := r.Rootfs[0]
@@ -151,6 +154,9 @@ func create(ctx context.Context, s *service, r *taskAPI.CreateTaskRequest) (*con
 }
 
 func loadSpec(r *taskAPI.CreateTaskRequest) (*specs.Spec, string, error) {
+	shimLog.Debug("loadSpec start()")
+	defer shimLog.Debug("loadSpec end()")
+
 	// Checks the MUST and MUST NOT from OCI runtime specification
 	bundlePath, err := validBundle(r.ID, r.Bundle)
 	if err != nil {
@@ -170,6 +176,9 @@ func loadSpec(r *taskAPI.CreateTaskRequest) (*specs.Spec, string, error) {
 // 2. shimv2 create task option
 // 3. environment
 func loadRuntimeConfig(s *service, r *taskAPI.CreateTaskRequest, anno map[string]string) (*oci.RuntimeConfig, error) {
+	shimLog.Debug("loadRuntimeConfig start()")
+	defer shimLog.Debug("loadRuntimeConfig end()")
+
 	if s.config != nil {
 		return s.config, nil
 	}
@@ -206,6 +215,9 @@ func loadRuntimeConfig(s *service, r *taskAPI.CreateTaskRequest, anno map[string
 }
 
 func checkAndMount(s *service, r *taskAPI.CreateTaskRequest) (bool, error) {
+	shimLog.Debug("checkAndMount start()")
+	defer shimLog.Debug("checkAndMount end()")
+
 	if len(r.Rootfs) == 1 {
 		m := r.Rootfs[0]
 
@@ -222,6 +234,9 @@ func checkAndMount(s *service, r *taskAPI.CreateTaskRequest) (bool, error) {
 }
 
 func doMount(mounts []*containerd_types.Mount, rootfs string) error {
+	shimLog.Debug("doMount start()")
+	defer shimLog.Debug("doMount end()")
+
 	if len(mounts) == 0 {
 		return nil
 	}
