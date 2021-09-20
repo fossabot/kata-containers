@@ -13,7 +13,7 @@ readonly script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly script_name="$(basename "${BASH_SOURCE[0]}")"
 
 readonly tmp_dir=$(mktemp -t -d pr-bump.XXXX)
-readonly organization="kata-containers"
+readonly organization="fidencio"
 PUSH="false"
 GOPATH=${GOPATH:-${HOME}/go}
 
@@ -230,7 +230,7 @@ EOT
 
 repos=(
 	"kata-containers"
-	"tests"
+	"kata-tests"
 )
 
 main(){

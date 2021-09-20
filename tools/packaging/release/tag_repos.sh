@@ -12,7 +12,7 @@ set -o pipefail
 tmp_dir=$(mktemp -d -t tag-repos-tmp.XXXXXXXXXX)
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 script_name="$(basename "${BASH_SOURCE[0]}")"
-OWNER=${OWNER:-"kata-containers"}
+OWNER=${OWNER:-"fidencio"}
 PROJECT="Kata Containers"
 PUSH="${PUSH:-"false"}"
 branch="main"
@@ -69,7 +69,7 @@ info() {
 
 repos=(
 	"kata-containers"
-	"tests"
+	"kata-tests"
 )
 
 
