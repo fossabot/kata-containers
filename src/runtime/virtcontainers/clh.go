@@ -162,6 +162,10 @@ func (s *CloudHypervisorState) reset() {
 	s.state = clhNotReady
 }
 
+type CloudHypervisorNet struct {
+	netCfg chclient.NetConfig
+}
+
 type cloudHypervisor struct {
 	console   console.Console
 	virtiofsd Virtiofsd
@@ -170,6 +174,7 @@ type cloudHypervisor struct {
 	id        string
 	vmconfig  chclient.VmConfig
 	state     CloudHypervisorState
+	net       CloudHypervisorNet
 	config    HypervisorConfig
 }
 
@@ -1132,6 +1137,12 @@ func (clh *cloudHypervisor) bootVM(ctx context.Context) error {
 		return fmt.Errorf("VM state is not 'Running' after 'BootVM'")
 	}
 
+	netInfo, _, err := cl.VmAddNetPut(ctx, clh.net.netCfg)
+	if err != nil {
+		return err
+	}
+	clh.Logger().Debugf("Adding a new network interface: %#v", netInfo)
+
 	return nil
 }
 
@@ -1163,14 +1174,9 @@ func (clh *cloudHypervisor) addNet(e Endpoint) error {
 		"tap": tapPath,
 	}).Info("Adding Net")
 
-	net := chclient.NewNetConfig()
-	net.Mac = &mac
-	net.Tap = &tapPath
-	if clh.vmconfig.Net != nil {
-		*clh.vmconfig.Net = append(*clh.vmconfig.Net, *net)
-	} else {
-		clh.vmconfig.Net = &[]chclient.NetConfig{*net}
-	}
+	clh.net.netCfg = *chclient.NewNetConfig()
+	clh.net.netCfg.Mac = &mac
+	clh.net.netCfg.Tap = &tapPath
 
 	return nil
 }
