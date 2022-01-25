@@ -97,6 +97,8 @@ type clhClient interface {
 	VmAddDiskPut(ctx context.Context, diskConfig chclient.DiskConfig) (chclient.PciDeviceInfo, *http.Response, error)
 	// Remove a device from the VM
 	VmRemoveDevicePut(ctx context.Context, vmRemoveDevice chclient.VmRemoveDevice) (*http.Response, error)
+	// Add a new network device to the VM
+	VmAddNetPut(ctx context.Context, netConfig chclient.NetConfig) (chclient.PciDeviceInfo, *http.Response, error)
 }
 
 type clhClientApi struct {
@@ -138,6 +140,10 @@ func (c *clhClientApi) VmAddDiskPut(ctx context.Context, diskConfig chclient.Dis
 
 func (c *clhClientApi) VmRemoveDevicePut(ctx context.Context, vmRemoveDevice chclient.VmRemoveDevice) (*http.Response, error) {
 	return c.ApiInternal.VmRemoveDevicePut(ctx).VmRemoveDevice(vmRemoveDevice).Execute()
+}
+
+func (c *clhClientApi) VmAddNetPut(ctx context.Context, netConfig chclient.NetConfig) (chclient.PciDeviceInfo, *http.Response, error) {
+	return c.ApiInternal.VmAddNetPut(ctx).NetConfig(netConfig).Execute()
 }
 
 //
