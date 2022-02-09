@@ -408,6 +408,14 @@ func createLink(netHandle *netlink.Handle, name string, expectedLink netlink.Lin
 		flags := netlink.TUNTAP_VNET_HDR
 		if queues > 0 {
 			flags |= netlink.TUNTAP_MULTI_QUEUE_DEFAULTS
+		} else {
+			// We need to eforce `queues = 1` here in case
+			// multi-queue is **not** supported.  The reason
+			// for that being `linkModify()`, a method called
+			// by `linkAdd()`, only returning the fd of an
+			// opened tuntap device when the queues are set
+			// to *non zero*.
+			queues = 1
 		}
 		newLink = &netlink.Tuntap{
 			LinkAttrs: netlink.LinkAttrs{Name: name},

@@ -161,8 +161,14 @@ func TestCreateMacVtap(t *testing.T) {
 	assert.NoError(err)
 
 	tapName := "testtap0"
-	tapLink, _, err := createLink(netHandle, tapName, &netlink.Tuntap{}, 1)
+	tapLink, fds, err := createLink(netHandle, tapName, &netlink.Tuntap{}, 0)
 	assert.NoError(err)
+	assert.NotNil(tapLink)
+	assert.NotZero(len(fds))
+
+	tuntap, ok := tapLink.(*netlink.Tuntap)
+	assert.True(ok)
+	assert.Equal(tuntap.Queues, 1)
 
 	attrs := tapLink.Attrs()
 
