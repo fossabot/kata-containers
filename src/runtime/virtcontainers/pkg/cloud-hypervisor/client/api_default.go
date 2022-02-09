@@ -13,6 +13,7 @@ package openapi
 import (
 	"bytes"
 	_context "context"
+	"github.com/sirupsen/logrus"
 	_ioutil "io/ioutil"
 	_nethttp "net/http"
 	_neturl "net/url"
@@ -1205,42 +1206,55 @@ func (a *DefaultApiService) VmAddNetPutExecute(r ApiVmAddNetPutRequest) (PciDevi
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "DefaultApiService.VmAddNetPut")
+	logrus.Errorf("FIDENCIO | localBasePath: %v", localBasePath)
 	if err != nil {
 		return localVarReturnValue, nil, GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/vm.add-net"
+	logrus.Errorf("FIDENCIO | localVarPath: %v", localVarPath)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
+	logrus.Errorf("FIDENCIO | localVarQueryParams: %v", localVarQueryParams)
 	localVarFormParams := _neturl.Values{}
+	logrus.Errorf("FIDENCIO | localVarFormParams: %v", localVarFormParams)
 	if r.netConfig == nil {
 		return localVarReturnValue, nil, reportError("netConfig is required and must be specified")
 	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
+	logrus.Errorf("FIDENCIO | localVarHTTPContentTypes: %v", localVarHTTPContentTypes)
 
 	// set Content-Type header
 	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
 	if localVarHTTPContentType != "" {
 		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
 	}
+	logrus.Errorf("FIDENCIO | localVarHTTPContentType: %v", localVarHTTPContentType)
 
 	// to determine the Accept header
 	localVarHTTPHeaderAccepts := []string{"application/json"}
+	logrus.Errorf("FIDENCIO | localVarHTTPHeaderAccepts: %v", localVarHTTPHeaderAccepts)
 
 	// set Accept header
 	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	logrus.Errorf("FIDENCIO | localVarHTTPHeaderAccept: %v", localVarHTTPHeaderAccept)
+
+	logrus.Errorf("FIDENCIO | localVarHeaderParams: %v", localVarHeaderParams)
+
 	// body params
 	localVarPostBody = r.netConfig
+	logrus.Errorf("FIDENCIO | localVarPostBody: %v", localVarPostBody)
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
 	}
+	logrus.Errorf("FIDENCIO | req: #v", req)
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
