@@ -70,7 +70,13 @@ build_rootfs() {
 		${OS_NAME} \
 		${ROOTFS_DIR}
 
-	[ -n "${EXTRA_PKGS}" ] && chroot $ROOTFS_DIR apt-get install -y ${EXTRA_PKGS}
+	[ -n "${EXTRA_PKGS}" ] && chroot $ROOTFS_DIR /bin/bash -x <<'EOF'
+apt-get install -y ${EXTRA_PKGS}
+
+dpkg --add-architecture i386
+apt-get update
+apt-get install -y multiarch-support:i386
+EOF
 
     # Reduce image size and memory footprint
     # removing not needed files and directories.
