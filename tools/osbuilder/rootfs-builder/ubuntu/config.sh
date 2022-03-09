@@ -7,9 +7,9 @@
 # loaded just before call the function. For more information see the
 # rootfs-builder/README.md file.
 
-OS_VERSION=${OS_VERSION:-20.04}
+OS_VERSION=${OS_VERSION:-18.04}
 # This should be Ubuntu's code name, e.g. "focal" (Focal Fossa) for 20.04
-OS_NAME=${OS_NAME:-"focal"}
+OS_NAME=${OS_NAME:-"bionic"}
 
 # packages to be installed by default
 PACKAGES="systemd coreutils init kmod"
