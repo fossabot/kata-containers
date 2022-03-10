@@ -124,8 +124,8 @@ assets:
         name: "ubuntu"
         version: "latest"
       x86_64:
-        name: &default-image-name "clearlinux"
-        version: "latest"
+        name: &default-image-name "ubuntu"
+        version: "18.04"
     meta:
       image-type: *default-image-name
 
