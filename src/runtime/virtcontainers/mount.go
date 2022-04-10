@@ -172,7 +172,7 @@ func getDeviceForPath(path string) (device, error) {
 		}, nil
 	}
 
-	// We get the mount point by recursively performing stat on the path
+	// We get the mount point by recursively peforming stat on the path
 	// The point where the device changes indicates the mountpoint
 	for {
 		if mountPoint == "/" {
@@ -326,9 +326,7 @@ func bindMountContainerRootfs(ctx context.Context, shareDir, cid, cRootFs string
 
 // Mount describes a container mount.
 type Mount struct {
-	// Source is the source of the mount.
-	Source string
-	// Destination is the destination of the mount (within the container).
+	Source      string
 	Destination string
 
 	// Type specifies the type of filesystem to mount.
@@ -336,11 +334,6 @@ type Mount struct {
 
 	// HostPath used to store host side bind mount path
 	HostPath string
-
-	// GuestDeviceMount represents the path within the VM that the device
-	// is mounted. Only relevant for block devices. This is tracked in the event
-	// runtime wants to query the agent for mount stats.
-	GuestDeviceMount string
 
 	// BlockDeviceID represents block device that is attached to the
 	// VM in case this mount is a block device file or a directory
