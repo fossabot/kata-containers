@@ -25,7 +25,6 @@ allowed = [
         "ReadStreamRequest",
         "RemoveContainerRequest",
         "ReseedRandomDevRequest",
-        "ResizeVolumeRequest",
         "ResumeContainerRequest",
         "SetGuestDateTimeRequest",
         "SignalProcessRequest",
@@ -35,7 +34,6 @@ allowed = [
         "UpdateContainerRequest",
         "UpdateInterfaceRequest",
         "UpdateRoutesRequest",
-        "VolumeStatsRequest",
         "WaitProcessRequest",
         "WriteStreamRequest"
 ]

@@ -95,7 +95,6 @@ fn real_main() -> Result<(), std::io::Error> {
 
     let protos = vec![
         "protos/agent.proto",
-        "protos/csi.proto",
         "protos/google/protobuf/empty.proto",
         "protos/health.proto",
         "protos/oci.proto",
