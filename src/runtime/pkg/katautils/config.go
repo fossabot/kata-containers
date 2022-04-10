@@ -427,7 +427,7 @@ func (h hypervisor) blockDeviceDriver() (string, error) {
 }
 
 func (h hypervisor) sharedFS() (string, error) {
-	supportedSharedFS := []string{config.Virtio9P, config.VirtioFS, config.VirtioFSNydus}
+	supportedSharedFS := []string{config.Virtio9P, config.VirtioFS, config.VirtioFSNydus, config.SharedNone}
 
 	if h.SharedFS == "" {
 		return config.VirtioFS, nil
@@ -826,7 +826,7 @@ func newClhHypervisorConfig(h hypervisor) (vc.HypervisorConfig, error) {
 		return vc.HypervisorConfig{}, err
 	}
 
-	if sharedFS != config.VirtioFS && sharedFS != config.VirtioFSNydus {
+	if sharedFS == config.Virtio9P {
 		return vc.HypervisorConfig{}, errors.New("clh only support virtio-fs or virtio-fs-nydus")
 	}
 

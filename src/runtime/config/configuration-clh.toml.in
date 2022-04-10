@@ -108,6 +108,7 @@ default_memory = @DEFMEMSZ@
 # Shared file system type:
 #   - virtio-fs (default)
 #   - virtio-fs-nydus
+#   - none (disables shared file systems)
 shared_fs = "@DEFSHAREDFS_CLH_VIRTIOFS@"
 
 # Path to vhost-user-fs daemon.
