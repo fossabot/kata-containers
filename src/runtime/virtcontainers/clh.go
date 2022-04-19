@@ -1503,5 +1503,5 @@ func (clh *cloudHypervisor) vmInfo() (chclient.VmInfo, error) {
 }
 
 func (clh *cloudHypervisor) IsRateLimiterBuiltin() bool {
-	return false
+	return true
 }
