@@ -442,6 +442,16 @@ func (clh *cloudHypervisor) CreateVM(ctx context.Context, id string, network Net
 			disk := chclient.NewDiskConfig(imagePath)
 			disk.SetReadonly(true)
 
+			diskRateLimiterConfig := clh.getRateLimiterConfig(
+				int64(utils.RevertBytes(clh.config.DiskRateLimiterBwMaxRate/8)),
+				int64(utils.RevertBytes(clh.config.DiskRateLimiterBwOneTimeBurst/8)),
+				int64(clh.config.DiskRateLimiterOpsMaxRate),
+				int64(clh.config.DiskRateLimiterOpsOneTimeBurst))
+
+			if diskRateLimiterConfig != nil {
+				disk.SetRateLimiterConfig(*diskRateLimiterConfig)
+			}
+
 			if clh.vmconfig.Disks != nil {
 				*clh.vmconfig.Disks = append(*clh.vmconfig.Disks, *disk)
 			} else {
@@ -666,6 +676,16 @@ func (clh *cloudHypervisor) hotplugAddBlockDevice(drive *config.BlockDrive) erro
 	clhDisk.Readonly = &drive.ReadOnly
 	clhDisk.VhostUser = func(b bool) *bool { return &b }(false)
 	clhDisk.Id = &driveID
+
+	diskRateLimiterConfig := clh.getRateLimiterConfig(
+		int64(utils.RevertBytes(clh.config.DiskRateLimiterBwMaxRate/8)),
+		int64(utils.RevertBytes(clh.config.DiskRateLimiterBwOneTimeBurst/8)),
+		int64(clh.config.DiskRateLimiterOpsMaxRate),
+		int64(clh.config.DiskRateLimiterOpsOneTimeBurst))
+
+	if diskRateLimiterConfig != nil {
+		clhDisk.SetRateLimiterConfig(*diskRateLimiterConfig)
+	}
 
 	pciInfo, _, err := cl.VmAddDiskPut(ctx, clhDisk)
 
