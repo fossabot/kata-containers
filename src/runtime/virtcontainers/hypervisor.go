@@ -380,6 +380,24 @@ type HypervisorConfig struct {
 	// Enable SGX. Hardware-based isolation and memory encryption.
 	SGXEPCSize int64
 
+	// DiskRateLimiterBwRate is used to control disk I/O bandwidth on VM level.
+	// The same value, defined in bits per second, is used for inbound and outbound bandwidth.
+	DiskRateLimiterBwMaxRate uint64
+
+	// DiskRateLimiterBwOneTimeBurst is used to control disk I/O bandwidth on VM level.
+	// This increases the initial max rate and this initial extra credit does *NOT* replenish
+	// and can be used for an *initial* burst of data.
+	DiskRateLimiterBwOneTimeBurst uint64
+
+	// DiskRateLimiterOpsRate is used to control disk I/O bandwidth on VM level.
+	// The same value, defined in operations per second, is used for inbound and outbound bandwidth.
+	DiskRateLimiterOpsMaxRate uint64
+
+	// DiskRateLimiterOpsOneTimeBurst is used to control disk I/O bandwidth on VM level.
+	// This increases the initial max rate and this initial extra credit does *NOT* replenish
+	// and can be used for an *initial* burst of data.
+	DiskRateLimiterOpsOneTimeBurst uint64
+
 	// RxRateLimiterMaxRate is used to control network I/O inbound bandwidth on VM level.
 	RxRateLimiterMaxRate uint64
 
