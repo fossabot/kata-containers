@@ -174,7 +174,7 @@ DEFVALIDENTROPYSOURCES := [\"/dev/urandom\",\"/dev/random\",\"\"]
 
 DEFDISABLEBLOCK := false
 DEFSHAREDFS_CLH_VIRTIOFS := virtio-fs
-DEFSHAREDFS_QEMU_VIRTIOFS := virtio-fs
+DEFSHAREDFS_QEMU_VIRTIOFS := virtio-9p
 DEFVIRTIOFSDAEMON := $(LIBEXECDIR)/kata-qemu/virtiofsd
 DEFVALIDVIRTIOFSDAEMONPATHS := [\"$(DEFVIRTIOFSDAEMON)\"]
 # Default DAX mapping cache size in MiB
