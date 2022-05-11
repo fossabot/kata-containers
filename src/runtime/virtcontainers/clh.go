@@ -9,11 +9,13 @@
 package virtcontainers
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
 	"net"
 	"net/http"
+	"net/http/httputil"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -99,8 +101,6 @@ type clhClient interface {
 	VmAddDiskPut(ctx context.Context, diskConfig chclient.DiskConfig) (chclient.PciDeviceInfo, *http.Response, error)
 	// Remove a device from the VM
 	VmRemoveDevicePut(ctx context.Context, vmRemoveDevice chclient.VmRemoveDevice) (*http.Response, error)
-	// Add a new net device to the VM
-	VmAddNetPut(ctx context.Context, netConfig chclient.NetConfig) (chclient.PciDeviceInfo, *http.Response, error)
 }
 
 type clhClientApi struct {
@@ -144,8 +144,48 @@ func (c *clhClientApi) VmRemoveDevicePut(ctx context.Context, vmRemoveDevice chc
 	return c.ApiInternal.VmRemoveDevicePut(ctx).VmRemoveDevice(vmRemoveDevice).Execute()
 }
 
-func (c *clhClientApi) VmAddNetPut(ctx context.Context, netConfig chclient.NetConfig) (chclient.PciDeviceInfo, *http.Response, error) {
-	return c.ApiInternal.VmAddNetPut(ctx).NetConfig(netConfig).Execute()
+// This is done in order to be able to override such a function as part of
+// our unit tests, as when testing bootVM we're on a mocked scenario already.
+var vmAddNetPutRequest = func(clh *cloudHypervisor) error {
+	addr, err := net.ResolveUnixAddr("unix", clh.state.apiSocket)
+	if err != nil {
+		return err
+	}
+
+	conn, err := net.DialUnix("unix", nil, addr)
+	if err != nil {
+		return err
+	}
+	defer conn.Close()
+
+	for _, netDevice := range *clh.netDevices {
+		netDeviceAsJson, err := json.Marshal(netDevice)
+		if err != nil {
+			return err
+		}
+		netDeviceAsIoReader := bytes.NewBuffer(netDeviceAsJson)
+
+		req, err := http.NewRequest(http.MethodPut, "http://localhost/api/v1/vm.add-net", netDeviceAsIoReader)
+		if err != nil {
+			return err
+		}
+
+		req.Header.Set("Accept", "application/json")
+		req.Header.Set("Content-Type", "application/json")
+		req.Header.Set("Content-Length", strconv.Itoa(int(netDeviceAsIoReader.Len())))
+
+		payload, err := httputil.DumpRequest(req, true)
+		if err != nil {
+			return err
+		}
+
+		_, err = conn.Write([]byte(payload))
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 //
@@ -1268,6 +1308,10 @@ func openAPIClientError(err error) error {
 	return fmt.Errorf("error: %v reason: %s", err, reason)
 }
 
+func (clh *cloudHypervisor) vmAddNetPut() error {
+	return vmAddNetPutRequest(clh)
+}
+
 func (clh *cloudHypervisor) bootVM(ctx context.Context) error {
 
 	cl := clh.client()
@@ -1295,17 +1339,9 @@ func (clh *cloudHypervisor) bootVM(ctx context.Context) error {
 		return fmt.Errorf("VM state is not 'Created' after 'CreateVM'")
 	}
 
-	// This situation would never actually happen, as the network devices
-	// are created before actually creating the VM.
-	// We need, however, to add the check here in order to make our tests
-	// happy enough.
-	if clh.netDevices != nil {
-		for _, netDevice := range *clh.netDevices {
-			_, _, err = cl.VmAddNetPut(ctx, netDevice)
-			if err != nil {
-				return err
-			}
-		}
+	err = clh.vmAddNetPut()
+	if err != nil {
+		return err
 	}
 
 	clh.Logger().Debug("Booting VM")
