@@ -179,7 +179,13 @@ var vmAddNetPutRequest = func(clh *cloudHypervisor) error {
 			return err
 		}
 
-		_, err = conn.Write([]byte(payload))
+		files := clh.netDevicesFiles[*netDevice.Mac]
+		var fds []int
+		for _, f := range files {
+			fds = append(fds, int(f.Fd()))
+		}
+		oob := syscall.UnixRights(fds...)
+		_, _, err = conn.WriteMsgUnix([]byte(payload), oob, nil)
 		if err != nil {
 			return err
 		}
@@ -205,16 +211,17 @@ func (s *CloudHypervisorState) reset() {
 }
 
 type cloudHypervisor struct {
-	console        console.Console
-	virtiofsDaemon VirtiofsDaemon
-	APIClient      clhClient
-	ctx            context.Context
-	id             string
-	netDevices     *[]chclient.NetConfig
-	devicesIds     map[string]string
-	vmconfig       chclient.VmConfig
-	state          CloudHypervisorState
-	config         HypervisorConfig
+	console         console.Console
+	virtiofsDaemon  VirtiofsDaemon
+	APIClient       clhClient
+	ctx             context.Context
+	id              string
+	netDevices      *[]chclient.NetConfig
+	devicesIds      map[string]string
+	netDevicesFiles map[string][]*os.File
+	vmconfig        chclient.VmConfig
+	state           CloudHypervisorState
+	config          HypervisorConfig
 }
 
 var clhKernelParams = []Param{
@@ -406,6 +413,7 @@ func (clh *cloudHypervisor) CreateVM(ctx context.Context, id string, network Net
 	clh.id = id
 	clh.state.state = clhNotReady
 	clh.devicesIds = make(map[string]string)
+	clh.netDevicesFiles = make(map[string][]*os.File)
 
 	clh.Logger().WithField("function", "CreateVM").Info("creating Sandbox")
 
@@ -1432,6 +1440,7 @@ func (clh *cloudHypervisor) addNet(e Endpoint) error {
 	if tapPath == "" {
 		return errors.New("TAP path in network pair is empty")
 	}
+	clh.netDevicesFiles[mac] = netPair.TapInterface.VMFds
 
 	clh.Logger().WithFields(log.Fields{
 		"mac": mac,
