@@ -1352,6 +1352,8 @@ func (clh *cloudHypervisor) bootVM(ctx context.Context) error {
 		return err
 	}
 
+	time.Sleep(5)
+
 	clh.Logger().Debug("Booting VM")
 	_, err = cl.BootVM(ctx)
 	if err != nil {
