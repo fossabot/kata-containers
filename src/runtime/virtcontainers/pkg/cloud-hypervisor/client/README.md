@@ -138,7 +138,6 @@ Class | Method | HTTP request | Description
  - [TdxConfig](docs/TdxConfig.md)
  - [TokenBucket](docs/TokenBucket.md)
  - [VdpaConfig](docs/VdpaConfig.md)
- - [VmAddDevice](docs/VmAddDevice.md)
  - [VmConfig](docs/VmConfig.md)
  - [VmInfo](docs/VmInfo.md)
  - [VmRemoveDevice](docs/VmRemoveDevice.md)
