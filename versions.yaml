@@ -157,7 +157,7 @@ assets:
     tdx:
       description: "Linux kernel that supports TDX"
       url: "https://github.com/intel/tdx/archive/refs/tags"
-      tag: "tdx-guest-v5.15-4"
+      tag: "tdx-guest-v5.15-9"
     sev:
       description: "Linux kernel with efi_secret support"
       url: "https://github.com/confidential-containers-demo/\
