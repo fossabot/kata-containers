@@ -127,10 +127,7 @@ get_tee_kernel() {
 	mkdir -p ${kernel_path}
 
 	[ -z "${kernel_url}" ] && kernel_url=$(get_from_kata_deps "assets.kernel.${tee}.url")
-
-	kernel_tarball="linux-${version}.tar.gz"
-	tarball_name=$(get_from_kata_deps "assets.kernel.${tee}.tarball")
-	[ -z "$tarball_name" ] || kernel_tarball="$tarball_name"
+	[ "${tee}" == "sev" ] && kernel_tarball="linux-${version}.tar.gz" || kernel_tarball="${version}.tar.gz"
 
 	if [ ! -f "${kernel_tarball}" ]; then
 	   curl --fail -OL "${kernel_url}/${kernel_tarball}"
