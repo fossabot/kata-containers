@@ -217,7 +217,8 @@ function remove_artifacts() {
 	# Try to remove the /opt/confidential-containers directory.
 	# If it's not empty, don't bother force removing it, as the
 	# pre-install script also drops files here.
-	rmdir /opt/confidential-containers 2>/dev/null
+	rmdir /opt/confidential-containers ||
+		echo "Not all files in /opt/confidential-containers were deployed by the Kata Payload, the directroy will not be removed"
 }
 
 function cleanup_cri_runtime() {
