@@ -9,6 +9,7 @@ export GOPATH=${GOPATH:-${HOME}/go}
 export tests_repo="${tests_repo:-github.com/kata-containers/tests}"
 export tests_repo_dir="$GOPATH/src/$tests_repo"
 export CC_BUILDER_REGISTRY="quay.io/kata-containers/cc-builders"
+export PUSH_TO_REGISTRY="${PUSH_TO_REGISTRY:-"no"}"
 
 this_script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
@@ -120,4 +121,14 @@ get_last_modification() {
 	local file="${1}"
 
 	echo "$(git log -1 --pretty=format:"%H" ${file})"
+}
+
+# $1 - The tag to be pushed to the registry
+push_to_registry() {
+	local tag="${1}"
+	local already_exists="${2}"
+
+	if [ "${PUSH_TO_REGISTRY}" == "yes" ]; then
+		sudo docker push ${tag}
+	fi
 }
