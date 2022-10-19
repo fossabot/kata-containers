@@ -114,3 +114,10 @@ get_config_version() {
 		die "failed to find ${config_version_file}"
 	fi
 }
+
+# $1 - The file we're looking for the last modification
+get_last_modification() {
+	local file="${1}"
+
+	echo "$(git log -1 --pretty=format:"%H" ${file})"
+}
