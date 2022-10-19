@@ -30,13 +30,8 @@ jobs:
           curl -fsSL https://test.docker.com -o test-docker.sh
           sh test-docker.sh
 
-      - name: Update repo
-        run: |
-          git remote update
-
       - name: Build ${{ matrix.asset }}
         run: |
-          git checkout CCv0
           ./tools/packaging/kata-deploy/local-build/kata-deploy-copy-yq-installer.sh
           ./tools/packaging/kata-deploy/local-build/kata-deploy-binaries-in-docker.sh --build="${KATA_ASSET}"
           build_dir=$(readlink -f build)
@@ -65,7 +60,6 @@ jobs:
           path: kata-artifacts
       - name: merge-artifacts
         run: |
-          git checkout CCv0
           ./tools/packaging/kata-deploy/local-build/kata-deploy-merge-builds.sh kata-artifacts
       - name: store-artifacts
         uses: actions/upload-artifact@v2
@@ -85,5 +79,4 @@ jobs:
       - name: build-and-push-kata-payload
         id: build-and-push-kata-payload
         run: |
-          git checkout CCv0
           ./tools/packaging/kata-deploy/local-build/kata-deploy-build-and-upload-payload.sh $(pwd)/kata-static.tar.xz
