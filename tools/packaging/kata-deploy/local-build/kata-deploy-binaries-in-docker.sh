@@ -39,7 +39,7 @@ if [ ! -d "$HOME/.docker" ]; then
 	remove_dot_docker_dir=true
 fi
 
-container_image="${CC_BUILDER_REGISTRY}:build-kata-deploy-$(get_last_modification ${script_dir}/dockerfile/Dockerfile)"
+container_image="${CC_BUILDER_REGISTRY}:build-kata-deploy-$(get_last_modification ${script_dir}/dockerbuild/Dockerfile)"
 
 docker pull "${container_image}" || \
 	(docker build -q -t "${container_image}" \
