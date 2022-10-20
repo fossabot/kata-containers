@@ -124,10 +124,12 @@ get_last_modification() {
 }
 
 # $1 - The tag to be pushed to the registry
+# $2 - "yes" to use sudo, "no" otherwise
 push_to_registry() {
 	local tag="${1}"
+	local use_sudo="${2:-"yes"}"
 
 	if [ "${PUSH_TO_REGISTRY}" == "yes" ]; then
-		sudo docker push ${tag}
+		[ "${use_sudo}" == "yes" ] && sudo docker push ${tag} || docker push ${tag}
 	fi
 }
