@@ -49,7 +49,7 @@ docker pull "${container_image}" || \
 		--build-arg HOST_DOCKER_GID=${docker_gid} \
 		"${script_dir}/dockerbuild/" && \
  	 # No-op unless PUSH_TO_REGISTRY is exported as "yes"
-	 push_to_registry "${container_image}")
+	 push_to_registry "${container_image}" "no")
 
 docker run \
 	--privileged \
