@@ -126,7 +126,6 @@ get_last_modification() {
 # $1 - The tag to be pushed to the registry
 push_to_registry() {
 	local tag="${1}"
-	local already_exists="${2}"
 
 	if [ "${PUSH_TO_REGISTRY}" == "yes" ]; then
 		sudo docker push ${tag}
