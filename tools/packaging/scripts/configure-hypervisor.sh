@@ -242,7 +242,6 @@ generate_qemu_options() {
 	# Disable graphical network access
 	qemu_options+=(size:--disable-vnc)
 	qemu_options+=(size:--disable-vnc-jpeg)
-	qemu_options+=(size:--disable-vnc-png)
 	qemu_options+=(size:--disable-vnc-sasl)
 
 	# Disable PAM authentication: it's a feature used together with VNC access
@@ -353,8 +352,6 @@ generate_qemu_options() {
 	qemu_options+=(size:--disable-vde)
 
 	# Don't build other options which can't be depent on build server.
-	qemu_options+=(size:--disable-xfsctl)
-	qemu_options+=(size:--disable-libxml2)
 	qemu_options+=(size:--disable-nettle)
 
 	# Disable XEN driver

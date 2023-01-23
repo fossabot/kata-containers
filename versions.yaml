@@ -101,7 +101,7 @@ assets:
       tdx:
         description: "VMM that uses KVM and supports TDX"
         url: "https://github.com/kata-containers/qemu"
-        tag: "TDX-v3.1"
+        tag: "TDX-QEMU-7.0-v1.2"
       snp:
         description: "VMM that uses KVM and supports AMD SEV-SNP"
         url: "https://github.com/AMDESE/qemu"
@@ -160,7 +160,7 @@ assets:
     tdx:
       description: "Linux kernel that supports TDX"
       url: "https://github.com/kata-containers/linux/archive/refs/tags"
-      tag: "5.15-plus-TDX"
+      tag: "5.19-TDX-v1.11"
     sev:
       description: "Linux kernel that supports SEV"
       url: "https://cdn.kernel.org/pub/linux/kernel/v5.x/"
@@ -307,9 +307,9 @@ externals:
       package: "OvmfPkg/AmdSev/AmdSevX64.dsc"
       package_output_dir: "AmdSev"
     tdx:
-      url: "https://github.com/tianocore/edk2-staging"
+      url: "https://github.com/tianocore/edk2"
       description: "TDVF build needed for TDX measured direct boot."
-      version: "2022-tdvf-ww28.5"
+      version: "0be81a4d83810cdb018d293bc264f489e7664043"
       package: "OvmfPkg/OvmfPkgX64.dsc"
       package_output_dir: "OvmfX64"
 

@@ -36,8 +36,9 @@ info "Build ${ovmf_repo} version: ${ovmf_version}"
 
 build_root=$(mktemp -d)
 pushd $build_root
-git clone --single-branch --depth 1 -b "${ovmf_version}" "${ovmf_repo}"
+git clone "${ovmf_repo}"
 cd "${ovmf_dir}"
+git reset --hard "${ovmf_version}"
 git submodule init
 git submodule update
 
@@ -71,7 +72,6 @@ if [ "${ovmf_build}" == "tdx" ]; then
 	build_path_arch="${build_path_target_toolchain}/X64"
 	stat "${build_path_fv}/OVMF_CODE.fd"
 	stat "${build_path_fv}/OVMF_VARS.fd"
-	stat "${build_path_arch}/DumpTdxEventLog.efi"
 fi
 
 #need to leave tmp dir
@@ -88,7 +88,6 @@ install $build_root/$ovmf_dir/"${build_path_fv}"/OVMF.fd "${install_dir}"
 if [ "${ovmf_build}" == "tdx" ]; then
 	install $build_root/$ovmf_dir/"${build_path_fv}"/OVMF_CODE.fd ${install_dir}
 	install $build_root/$ovmf_dir/"${build_path_fv}"/OVMF_VARS.fd ${install_dir}
-	install $build_root/$ovmf_dir/"${build_path_arch}"/DumpTdxEventLog.efi ${install_dir}
 fi
 
 local_dir=${PWD}
